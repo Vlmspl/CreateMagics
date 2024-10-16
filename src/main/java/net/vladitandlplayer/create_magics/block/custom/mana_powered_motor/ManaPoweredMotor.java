@@ -1,9 +1,7 @@
 package net.vladitandlplayer.create_magics.block.custom.mana_powered_motor;
 
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
-import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,12 +20,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.vladitandlplayer.create_magics.CreateMagics;
 import net.vladitandlplayer.create_magics.Utils.Shapes;
 import net.vladitandlplayer.create_magics.block.ModBlockEntities;
 
 public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<ManaPoweredMotorBlockEntity> {
-    public static final VoxelShaper MANA_POWERED_MOTOR = Shapes.shape(0, 0, 0, 16, 11, 16).forDirectional();
+    public static final VoxelShaper MANA_POWERED_MOTOR = Shapes.shape(0, 2, 0, 16, 13, 16).forDirectional();
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public ManaPoweredMotor(Properties properties) {
@@ -73,6 +70,7 @@ public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<Man
     public Direction.Axis getRotationAxis(BlockState state) {
         return state.getValue(FACING).getAxis();
     }
+
 
     @Override
     public boolean hideStressImpact() {

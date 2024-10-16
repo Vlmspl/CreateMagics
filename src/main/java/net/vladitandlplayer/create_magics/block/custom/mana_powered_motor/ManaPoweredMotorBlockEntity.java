@@ -9,15 +9,14 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollVa
 import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.vladitandlplayer.create_magics.CreateMagics;
+import net.vladitandlplayer.create_magics.block.ModBlocks;
 
 import java.util.List;
 
@@ -38,16 +37,22 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         super.addBehaviours(behaviours);
 
         CenteredSideValueBoxTransform slot =
-                new CenteredSideValueBoxTransform((motor, side) -> motor.getValue(ManaPoweredMotor.FACING) == side.getOpposite());
+                new CenteredSideValueBoxTransform((motor, side) -> {
+                    Direction facing = motor.getValue(ManaPoweredMotor.FACING);
+                    Direction.Axis axis = facing.getAxis();
+                    // Determine the perpendicular direction based on the axis
+                    Direction perpendicular = axis == Direction.Axis.X ? (facing.getClockWise()) : facing.getOpposite();
+
+                    return side == perpendicular;
+                });
 
         generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
-        generatedSpeed.between(0, 256);
+        generatedSpeed.between(-256, 256);
         generatedSpeed.value = 32;
-        //generatedSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
         generatedSpeed.withCallback(i -> this.updateGeneratedRotation(i));
-        //generatedSpeed.withStepFunction(ElectricMotorTileEntity::step);
         behaviours.add(generatedSpeed);
     }
+
 
     public static int step(ScrollValueBehaviour.StepContext context) {
         int current = context.currentValue;
@@ -147,6 +152,13 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         }
     }
 
+    @Override
+    public float getGeneratedSpeed() {
+        if (!ModBlocks.MANA_POWERED_MOTOR.has(getBlockState())) return 0;
+        return convertToDirection(active ? generatedSpeed.getValue() : 0, getBlockState().getValue(ManaPoweredMotor.FACING));
+    }
+
+
     public static int getDurationAngle(int deg, float initialProgress, float speed) {
         speed = Math.abs(speed);
         deg = Math.abs(deg);
@@ -164,7 +176,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     public boolean setRPM(int rpm) {
-        rpm = Math.max(Math.min(rpm, 256), 0);
+        rpm = Math.max(Math.min(rpm, 256), -256);
         cc_new_rpm = rpm;
         cc_update_rpm = true;
         return cc_antiSpam > 0;

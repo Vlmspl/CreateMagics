@@ -8,8 +8,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.vladitandlplayer.create_magics.CreateMagics;
 import net.vladitandlplayer.create_magics.block.custom.mana_powered_motor.ManaPoweredMotor;
 
-import java.util.function.Supplier;
-
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
 public class ModBlocks {
