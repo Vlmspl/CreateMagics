@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vladitandlplayer.create_magics.CreateMagics;
 import net.vladitandlplayer.create_magics.block.custom.mana_powered_motor.ManaPoweredMotor;
+import net.vladitandlplayer.create_magics.block.custom.mana_powered_motor.ManaPoweredMotorBlockEntity;
 
 public class ManaRouterComponent extends SpellEffect {
     public ManaRouterComponent(ResourceLocation guiIcon) {
@@ -33,7 +34,7 @@ public class ManaRouterComponent extends SpellEffect {
             Level world = spellContext.getServerWorld();
 
             // Check if the block can receive power
-            if (canReceivePower(world.getBlockState(blockPos))) {
+            if (canReceivePower(world.getBlockState(blockPos), spellContext.getWorld(), blockPos)) {
                 // Example: Apply mana power to the block
                 applyManaPower(spellSource, world, blockPos);
                 result = ComponentApplicationResult.SUCCESS;
@@ -43,13 +44,19 @@ public class ManaRouterComponent extends SpellEffect {
         return result;
     }
 
-    private boolean canReceivePower(BlockState blockState) {
+    private boolean canReceivePower(BlockState blockState, Level world, BlockPos pos) {
         // Add logic to check if the block can receive power (e.g., check if it's a compatible block)
-        return blockState.getBlock() instanceof ManaPoweredMotor; // Replace with actual condition
+        ManaPoweredMotorBlockEntity entity = ((ManaPoweredMotor) blockState.getBlock()).getBlockEntity(world, pos);
+
+        return blockState.getBlock() instanceof ManaPoweredMotor && entity.getManaStored() + 20 < entity.getMaxMana(); // Replace with actual condition
     }
 
     private void applyManaPower(SpellSource spellSource, Level world, BlockPos blockPos) {
         CreateMagics.LOGGER.debug("applyManaPower function was called");
+        BlockState state = world.getBlockState(blockPos);
+
+        ManaPoweredMotorBlockEntity entity = ((ManaPoweredMotor) state.getBlock()).getBlockEntity(world, blockPos);
+        entity.setManaStored(entity.getManaStored()+20);
     }
 
     @Override

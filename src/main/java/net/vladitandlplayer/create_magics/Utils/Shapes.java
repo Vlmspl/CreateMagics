@@ -1,6 +1,6 @@
 package net.vladitandlplayer.create_magics.Utils;
 
-// Credits to mrh0, since its taken from his github on create's addon of Create crafts and additions,
+// Credits to mrh0, since it's taken from his github on creates addon of Create crafts and additions,
 // Url: https://github.com/mrh0/createaddition/blob/1.19.2/src/main/java/com/mrh0/createaddition/shapes/CAShapes.java
 
 import java.util.function.BiFunction;

@@ -22,6 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.vladitandlplayer.create_magics.Utils.Shapes;
 import net.vladitandlplayer.create_magics.block.ModBlockEntities;
+import org.jetbrains.annotations.Nullable;
 
 public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<ManaPoweredMotorBlockEntity> {
     public static final VoxelShaper MANA_POWERED_MOTOR = Shapes.shape(0, 2, 0, 16, 13, 16).forDirectional();
@@ -106,5 +107,11 @@ public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<Man
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModBlockEntities.MANA_POWERED_MOTOR_ENTITY.create(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public ManaPoweredMotorBlockEntity getBlockEntity(BlockGetter worldIn, BlockPos pos) {
+        return IBE.super.getBlockEntity(worldIn, pos);
     }
 }

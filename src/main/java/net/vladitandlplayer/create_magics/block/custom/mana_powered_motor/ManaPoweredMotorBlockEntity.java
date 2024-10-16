@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vladitandlplayer.create_magics.CreateMagics;
@@ -21,12 +22,34 @@ import net.vladitandlplayer.create_magics.block.ModBlocks;
 import java.util.List;
 
 public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
+    private Direction getMappedDirection(Direction toMap) {
+        if (toMap == Direction.SOUTH) {
+            return Direction.WEST;
+        } else if (toMap == Direction.NORTH) {
+            return Direction.EAST;
+        } else if (toMap == Direction.WEST) {
+            return Direction.SOUTH;
+        } else if (toMap == Direction.EAST) {
+            return Direction.NORTH;
+        } else if (toMap == Direction.UP) {
+            return Direction.WEST;
+        } else if (toMap == Direction.DOWN) {
+            return Direction.EAST;
+        }
+        return null;
+    }
+
     protected ScrollValueBehaviour generatedSpeed;
 
     private boolean cc_update_rpm = false;
     private int cc_new_rpm = 32;
 
     private boolean active = false;
+
+    // Mana storage variable
+    private int manaStored = 0;
+    private static final int MAX_MANA = 1000; // Define a maximum mana capacity
+    private static final int MANA_CONSUMPTION_PER_TICK = 1; // Define the mana consumption per tick
 
     public ManaPoweredMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -37,14 +60,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         super.addBehaviours(behaviours);
 
         CenteredSideValueBoxTransform slot =
-                new CenteredSideValueBoxTransform((motor, side) -> {
-                    Direction facing = motor.getValue(ManaPoweredMotor.FACING);
-                    Direction.Axis axis = facing.getAxis();
-                    // Determine the perpendicular direction based on the axis
-                    Direction perpendicular = axis == Direction.Axis.X ? (facing.getClockWise()) : facing.getOpposite();
-
-                    return side == perpendicular;
-                });
+                new CenteredSideValueBoxTransform((motor, side) -> side == getMappedDirection(motor.getValue(ManaPoweredMotor.FACING)));
 
         generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
         generatedSpeed.between(-256, 256);
@@ -52,7 +68,6 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         generatedSpeed.withCallback(i -> this.updateGeneratedRotation(i));
         behaviours.add(generatedSpeed);
     }
-
 
     public static int step(ScrollValueBehaviour.StepContext context) {
         int current = context.currentValue;
@@ -103,19 +118,20 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     public void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         active = compound.getBoolean("active");
+        manaStored = compound.getInt("manaStored"); // Load mana stored from NBT
     }
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putBoolean("active", active);
+        compound.putInt("manaStored", manaStored); // Save mana stored to NBT
     }
 
     @Override
     public void lazyTick() {
         super.lazyTick();
         cc_antiSpam = 5;
-
     }
 
     int cc_antiSpam = 0;
@@ -124,28 +140,41 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     @Override
     public void tick() {
         super.tick();
-        if(first) {
+        if (first) {
             updateGeneratedRotation();
             first = false;
         }
 
-        if(cc_update_rpm && cc_antiSpam > 0) {
+        if (cc_update_rpm && cc_antiSpam > 0) {
             generatedSpeed.setValue(cc_new_rpm);
             cc_update_rpm = false;
             cc_antiSpam--;
             updateGeneratedRotation();
         }
 
-        //Old Lazy
-        if(level.isClientSide()) return;
-        if(!active) {
-            if(!getBlockState().getValue(ManaPoweredMotor.POWERED)) {
-                active = true;
-                updateGeneratedRotation();
+        // Old Lazy
+        if (level.isClientSide()) return;
+
+        // Check for mana presence
+        if (manaStored > 0) {
+            if (!active) {
+                if (!getBlockState().getValue(ManaPoweredMotor.POWERED)) {
+                    active = true;
+                    updateGeneratedRotation();
+                }
+            } else {
+                // Consume mana if the motor is active
+                if (manaStored >= MANA_CONSUMPTION_PER_TICK) {
+                    manaStored -= MANA_CONSUMPTION_PER_TICK;
+                } else {
+                    // If not enough mana, deactivate the motor
+                    active = false;
+                    updateGeneratedRotation();
+                }
             }
-        }
-        else {
-            if(getBlockState().getValue(ManaPoweredMotor.POWERED)) {
+        } else {
+            // If there's no mana, deactivate the motor
+            if (active) {
                 active = false;
                 updateGeneratedRotation();
             }
@@ -158,11 +187,10 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         return convertToDirection(active ? generatedSpeed.getValue() : 0, getBlockState().getValue(ManaPoweredMotor.FACING));
     }
 
-
     public static int getDurationAngle(int deg, float initialProgress, float speed) {
         speed = Math.abs(speed);
         deg = Math.abs(deg);
-        if(speed < 0.1f) return 0;
+        if (speed < 0.1f) return 0;
         double degreesPerTick = (speed * 360) / 60 / 20;
         return (int) ((1 - initialProgress) * deg / degreesPerTick + 1);
     }
@@ -170,7 +198,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     public static int getDurationDistance(int dis, float initialProgress, float speed) {
         speed = Math.abs(speed);
         dis = Math.abs(dis);
-        if(speed < 0.1f) return 0;
+        if (speed < 0.1f) return 0;
         double metersPerTick = speed / 512;
         return (int) ((1 - initialProgress) * dis / metersPerTick);
     }
@@ -183,13 +211,23 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     public int getRPM() {
-        return cc_new_rpm;//generatedSpeed.getValue();
+        return cc_new_rpm; //generatedSpeed.getValue();
     }
 
     public int getGeneratedStress() {
         return (int) calculateAddedStressCapacity();
     }
 
+    // Getter and setter for mana storage
+    public int getManaStored() {
+        return manaStored;
+    }
 
+    public void setManaStored(int mana) {
+        this.manaStored = Math.min(MAX_MANA, Math.max(mana, 0)); // Ensure mana stays within bounds
+    }
 
+    public int getMaxMana() {
+        return MAX_MANA;
+    }
 }

@@ -14,7 +14,7 @@ import net.vladitandlplayer.create_magics.spells.component.ManaRouterComponent;
 
 @Mod.EventBusSubscriber(modid = CreateMagics.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SpellRegistration {
-    public static final SpellEffect MANA_ROUTE = new ManaRouterComponent(RLoc.create("texture/spell/component/blank.png"));
+    public static final SpellEffect MANA_ROUTE = new ManaRouterComponent(RLoc.create("textures/spell/component/mana_route.png"));
 
     @SubscribeEvent
     public static void registerComponents(RegisterEvent event) {
