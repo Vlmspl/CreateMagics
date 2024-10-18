@@ -48,7 +48,7 @@ public class ManaRouterComponent extends SpellEffect {
         // Add logic to check if the block can receive power (e.g., check if it's a compatible block)
         ManaPoweredMotorBlockEntity entity = ((ManaPoweredMotor) blockState.getBlock()).getBlockEntity(world, pos);
 
-        return blockState.getBlock() instanceof ManaPoweredMotor && entity.getManaStored() + 20 < entity.getMaxMana(); // Replace with actual condition
+        return blockState.getBlock() instanceof ManaPoweredMotor && entity.getMana() + 20 < entity.getMaxMana(); // Replace with actual condition
     }
 
     private void applyManaPower(SpellSource spellSource, Level world, BlockPos blockPos) {
@@ -56,12 +56,12 @@ public class ManaRouterComponent extends SpellEffect {
         BlockState state = world.getBlockState(blockPos);
 
         ManaPoweredMotorBlockEntity entity = ((ManaPoweredMotor) state.getBlock()).getBlockEntity(world, blockPos);
-        entity.setManaStored(entity.getManaStored()+20);
+        entity.addMana(20);
     }
 
     @Override
     public Affinity getAffinity() {
-        return Affinity.ARCANE;
+        return Affinity.UNKNOWN;
     }
 
     @Override

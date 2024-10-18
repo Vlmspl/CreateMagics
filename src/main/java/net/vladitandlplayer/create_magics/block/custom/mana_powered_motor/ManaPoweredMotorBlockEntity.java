@@ -17,11 +17,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vladitandlplayer.create_magics.CreateMagics;
+import net.vladitandlplayer.create_magics.ManaStorage;
 import net.vladitandlplayer.create_magics.block.ModBlocks;
 
 import java.util.List;
 
-public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
+public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity implements ManaStorage {
     private Direction getMappedDirection(Direction toMap) {
         if (toMap == Direction.SOUTH) {
             return Direction.WEST;
@@ -47,9 +48,12 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     private boolean active = false;
 
     // Mana storage variable
-    private int manaStored = 0;
-    private static final int MAX_MANA = 1000; // Define a maximum mana capacity
-    private static final int MANA_CONSUMPTION_PER_TICK = 1; // Define the mana consumption per tick
+    private float mana = 0.0f;
+    private static final float MAX_MANA = 1000.0f; // Define a maximum mana capacity
+    private static final float BASE_MANA_CONSUMPTION = 0.1f; // Define a base mana consumption value
+    private static final float MAX_STRESS = 8192.0f; // Define a maximum stress capacity, adjust as needed
+
+
 
     public ManaPoweredMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -85,17 +89,29 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     }
 
     public float calculateAddedStressCapacity() {
-        float capacity = 128;
+        float speed = Math.abs(generatedSpeed.getValue());
+
+        // Mathematical calculation for stress capacity
+        float capacity = (speed <= 10)
+                ? MAX_STRESS
+                : Math.max(512, Math.min(MAX_STRESS, -(speed / 256.0f * MAX_STRESS - MAX_STRESS)));
+
         this.lastCapacityProvided = capacity;
         return capacity;
     }
+
+
+
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         tooltip.add(Component.literal(spacing).append(Component.translatable(CreateMagics.MOD_ID + ".tooltip.energy.consumption").withStyle(ChatFormatting.GRAY)));
+        tooltip.add(Component.literal(spacing)
+                .append(Component.translatable("Mana: " + String.format("%.2f", mana) + "/" + MAX_MANA).withStyle(ChatFormatting.AQUA)));
         return true;
     }
+
 
     public void updateGeneratedRotation(int i) {
         super.updateGeneratedRotation();
@@ -118,15 +134,16 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
     public void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         active = compound.getBoolean("active");
-        manaStored = compound.getInt("manaStored"); // Load mana stored from NBT
+        mana = compound.getFloat("manaStored"); // Corrected to getFloat
     }
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putBoolean("active", active);
-        compound.putInt("manaStored", manaStored); // Save mana stored to NBT
+        compound.putFloat("manaStored", mana); // Save as float for more precision
     }
+
 
     @Override
     public void lazyTick() {
@@ -156,18 +173,24 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         if (level.isClientSide()) return;
 
         // Check for mana presence
-        if (manaStored > 0) {
+        if (mana > 0) {
+            // Calculate mana consumption based on speed
+            float speed = Math.abs(generatedSpeed.getValue());
+            float manaConsumption = BASE_MANA_CONSUMPTION * (speed / 32.0f); // Adjust the divisor for balance
+
             if (!active) {
-                if (!getBlockState().getValue(ManaPoweredMotor.POWERED)) {
+                // If not active and sufficient mana, activate the motor
+                if (mana >= manaConsumption) {
                     active = true;
                     updateGeneratedRotation();
                 }
             } else {
-                // Consume mana if the motor is active
-                if (manaStored >= MANA_CONSUMPTION_PER_TICK) {
-                    manaStored -= MANA_CONSUMPTION_PER_TICK;
+                // If active, check if we have enough mana
+                if (mana >= manaConsumption) {
+                    mana -= manaConsumption; // Consume mana
+                    updateGeneratedRotation();
                 } else {
-                    // If not enough mana, deactivate the motor
+                    // If not enough mana, deactivate the motor and save mana for later
                     active = false;
                     updateGeneratedRotation();
                 }
@@ -180,6 +203,8 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
             }
         }
     }
+
+
 
     @Override
     public float getGeneratedSpeed() {
@@ -218,16 +243,28 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity {
         return (int) calculateAddedStressCapacity();
     }
 
-    // Getter and setter for mana storage
-    public int getManaStored() {
-        return manaStored;
+
+    @Override
+    public float getMana() {
+        return mana;
     }
 
-    public void setManaStored(int mana) {
-        this.manaStored = Math.min(MAX_MANA, Math.max(mana, 0)); // Ensure mana stays within bounds
-    }
-
-    public int getMaxMana() {
+    public float getMaxMana() {
         return MAX_MANA;
+    }
+
+    @Override
+    public void setMana(float amount) {
+        mana = amount;
+    }
+
+    @Override
+    public void addMana(float amount) {
+        mana += amount;
+    }
+
+    @Override
+    public void subMana(float amount) {
+        mana -= amount;
     }
 }
