@@ -109,9 +109,4 @@ public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<Man
         return ModBlockEntities.MANA_POWERED_MOTOR_ENTITY.create(pos, state);
     }
 
-    @Nullable
-    @Override
-    public ManaPoweredMotorBlockEntity getBlockEntity(BlockGetter worldIn, BlockPos pos) {
-        return IBE.super.getBlockEntity(worldIn, pos);
-    }
 }

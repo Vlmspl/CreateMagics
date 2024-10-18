@@ -13,16 +13,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vladitandlplayer.create_magics.CreateMagics;
-import net.vladitandlplayer.create_magics.ManaStorage;
+import net.vladitandlplayer.create_magics.IManaStorage;
 import net.vladitandlplayer.create_magics.block.ModBlocks;
 
 import java.util.List;
 
-public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity implements ManaStorage {
+public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity implements IManaStorage {
     private Direction getMappedDirection(Direction toMap) {
         if (toMap == Direction.SOUTH) {
             return Direction.WEST;
@@ -49,8 +48,8 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
 
     // Mana storage variable
     private float mana = 0.0f;
-    private static final float MAX_MANA = 1000.0f; // Define a maximum mana capacity
-    private static final float BASE_MANA_CONSUMPTION = 0.1f; // Define a base mana consumption value
+    private static final float MAX_MANA = 100.0f; // Define a maximum mana capacity
+    private static final float BASE_MANA_CONSUMPTION = 0.5f; // Define a base mana consumption value
     private static final float MAX_STRESS = 8192.0f; // Define a maximum stress capacity, adjust as needed
 
 
@@ -90,13 +89,13 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
 
     public float calculateAddedStressCapacity() {
         float speed = Math.abs(generatedSpeed.getValue());
+        float step = MAX_STRESS / 256.0f;
 
         // Mathematical calculation for stress capacity
-        float capacity = (speed <= 10)
-                ? MAX_STRESS
-                : Math.max(512, Math.min(MAX_STRESS, -(speed / 256.0f * MAX_STRESS - MAX_STRESS)));
+        float capacity = Math.max(512, Math.min(MAX_STRESS, -step+MAX_STRESS))/speed;
 
-        this.lastCapacityProvided = capacity;
+
+        this.capacity = capacity;
         return capacity;
     }
 
@@ -106,7 +105,6 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        tooltip.add(Component.literal(spacing).append(Component.translatable(CreateMagics.MOD_ID + ".tooltip.energy.consumption").withStyle(ChatFormatting.GRAY)));
         tooltip.add(Component.literal(spacing)
                 .append(Component.translatable("Mana: " + String.format("%.2f", mana) + "/" + MAX_MANA).withStyle(ChatFormatting.AQUA)));
         return true;
@@ -115,6 +113,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
 
     public void updateGeneratedRotation(int i) {
         super.updateGeneratedRotation();
+        calculateAddedStressCapacity();
         cc_new_rpm = i;
     }
 
@@ -255,16 +254,26 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public void setMana(float amount) {
-        mana = amount;
+        mana = Math.max(0, Math.min(MAX_MANA, amount));
     }
 
     @Override
     public void addMana(float amount) {
-        mana += amount;
+        setMana(mana + amount);
     }
 
     @Override
     public void subMana(float amount) {
-        mana -= amount;
+        setMana(mana - amount);
+    }
+
+    @Override
+    public boolean canReceiveMana(int amount) {
+        return getMana() + amount < getMaxMana();
+    }
+
+    @Override
+    public boolean isConsumer() {
+        return true;
     }
 }
