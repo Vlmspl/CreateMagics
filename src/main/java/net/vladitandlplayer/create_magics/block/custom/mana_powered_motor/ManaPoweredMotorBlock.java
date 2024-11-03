@@ -22,13 +22,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.vladitandlplayer.create_magics.Utils.Shapes;
 import net.vladitandlplayer.create_magics.block.ModBlockEntities;
-import org.jetbrains.annotations.Nullable;
 
-public class ManaPoweredMotor extends DirectionalKineticBlock implements IBE<ManaPoweredMotorBlockEntity> {
+public class ManaPoweredMotorBlock extends DirectionalKineticBlock implements IBE<ManaPoweredMotorBlockEntity> {
     public static final VoxelShaper MANA_POWERED_MOTOR = Shapes.shape(0, 2, 0, 16, 13, 16).forDirectional();
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ManaPoweredMotor(Properties properties) {
+    public ManaPoweredMotorBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }

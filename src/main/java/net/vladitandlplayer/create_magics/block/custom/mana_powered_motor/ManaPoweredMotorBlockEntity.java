@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.vladitandlplayer.create_magics.CreateMagics;
 import net.vladitandlplayer.create_magics.IManaStorage;
 import net.vladitandlplayer.create_magics.block.ModBlocks;
 
@@ -47,8 +46,8 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     private boolean active = false;
 
     // Mana storage variable
-    private float mana = 0.0f;
-    private static final float MAX_MANA = 100.0f; // Define a maximum mana capacity
+    private float Mana = 0.0f;
+    private static final float MaxMana = 100.0f; // Define a maximum mana capacity
     private static final float BASE_MANA_CONSUMPTION = 0.5f; // Define a base mana consumption value
     private static final float MAX_STRESS = 8192.0f; // Define a maximum stress capacity, adjust as needed
 
@@ -63,7 +62,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
         super.addBehaviours(behaviours);
 
         CenteredSideValueBoxTransform slot =
-                new CenteredSideValueBoxTransform((motor, side) -> side == getMappedDirection(motor.getValue(ManaPoweredMotor.FACING)));
+                new CenteredSideValueBoxTransform((motor, side) -> side == getMappedDirection(motor.getValue(ManaPoweredMotorBlock.FACING)));
 
         generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
         generatedSpeed.between(-256, 256);
@@ -106,7 +105,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         tooltip.add(Component.literal(spacing)
-                .append(Component.translatable("Mana: " + String.format("%.2f", mana) + "/" + MAX_MANA).withStyle(ChatFormatting.AQUA)));
+                .append(Component.translatable("Mana: " + String.format("%.2f", Mana) + "/" + MaxMana).withStyle(ChatFormatting.AQUA)));
         return true;
     }
 
@@ -133,14 +132,14 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     public void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
         active = compound.getBoolean("active");
-        mana = compound.getFloat("manaStored"); // Corrected to getFloat
+        Mana = compound.getFloat("manaStored"); // Corrected to getFloat
     }
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
         compound.putBoolean("active", active);
-        compound.putFloat("manaStored", mana); // Save as float for more precision
+        compound.putFloat("manaStored", Mana); // Save as float for more precision
     }
 
 
@@ -172,21 +171,21 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
         if (level.isClientSide()) return;
 
         // Check for mana presence
-        if (mana > 0) {
+        if (Mana > 0) {
             // Calculate mana consumption based on speed
             float speed = Math.abs(generatedSpeed.getValue());
             float manaConsumption = BASE_MANA_CONSUMPTION * (speed / 32.0f); // Adjust the divisor for balance
 
             if (!active) {
                 // If not active and sufficient mana, activate the motor
-                if (mana >= manaConsumption) {
+                if (Mana >= manaConsumption) {
                     active = true;
                     updateGeneratedRotation();
                 }
             } else {
                 // If active, check if we have enough mana
-                if (mana >= manaConsumption) {
-                    mana -= manaConsumption; // Consume mana
+                if (Mana >= manaConsumption) {
+                    Mana -= manaConsumption; // Consume mana
                     updateGeneratedRotation();
                 } else {
                     // If not enough mana, deactivate the motor and save mana for later
@@ -208,7 +207,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     @Override
     public float getGeneratedSpeed() {
         if (!ModBlocks.MANA_POWERED_MOTOR.has(getBlockState())) return 0;
-        return convertToDirection(active ? generatedSpeed.getValue() : 0, getBlockState().getValue(ManaPoweredMotor.FACING));
+        return convertToDirection(active ? generatedSpeed.getValue() : 0, getBlockState().getValue(ManaPoweredMotorBlock.FACING));
     }
 
     public static int getDurationAngle(int deg, float initialProgress, float speed) {
@@ -245,26 +244,26 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
 
     @Override
     public float getMana() {
-        return mana;
+        return Mana;
     }
 
     public float getMaxMana() {
-        return MAX_MANA;
+        return MaxMana;
     }
 
     @Override
     public void setMana(float amount) {
-        mana = Math.max(0, Math.min(MAX_MANA, amount));
+        Mana = Math.max(0, Math.min(MaxMana, amount));
     }
 
     @Override
     public void addMana(float amount) {
-        setMana(mana + amount);
+        setMana(Mana + amount);
     }
 
     @Override
     public void subMana(float amount) {
-        setMana(mana - amount);
+        setMana(Mana - amount);
     }
 
     @Override

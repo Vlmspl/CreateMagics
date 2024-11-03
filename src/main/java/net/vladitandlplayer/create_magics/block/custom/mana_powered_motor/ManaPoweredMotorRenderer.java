@@ -16,8 +16,8 @@ public class ManaPoweredMotorRenderer extends KineticBlockEntityRenderer {
 
     @Override
     protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
-        Direction facing = state.getValue(ManaPoweredMotor.FACING).getOpposite(); // Get opposite direction
-        BlockState updatedState = state.setValue(ManaPoweredMotor.FACING, facing); // Update the state with flipped direction
+        Direction facing = state.getValue(ManaPoweredMotorBlock.FACING).getOpposite(); // Get opposite direction
+        BlockState updatedState = state.setValue(ManaPoweredMotorBlock.FACING, facing); // Update the state with flipped direction
         return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, updatedState, facing); // Pass both updated state and direction
     }
 
