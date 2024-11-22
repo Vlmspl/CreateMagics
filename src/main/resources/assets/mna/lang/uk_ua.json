@@ -1,0 +1,4 @@
+{
+  "mna:components/mana_route": "Маршрутизація мани",
+  "mna:components/mana_route.desc.delay": "Затримка в секундах перед використанням цього компонента"
+}
