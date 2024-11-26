@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "create_magics:block/mana_powered_motor",
+      "x": 90, "y": 90
+    },
+    "facing=up": {
+      "model": "create_magics:block/mana_powered_motor",
+      "x": 270, "y": 90
+    },
+    "facing=north": {
+      "model": "create_magics:block/mana_powered_motor",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "create_magics:block/mana_powered_motor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create_magics:block/mana_powered_motor",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "create_magics:block/mana_powered_motor",
+      "y": 90
+    }
+  }
+}

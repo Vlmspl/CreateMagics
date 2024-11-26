@@ -1,0 +1,8 @@
+{
+  "block.create_magics.mana_powered_motor": "Мана-живленний мотор",
+
+  "mna:components/mana_route": "Маршрутизація мани",
+  "mna:components/mana_route.desc.delay": "Затримка в секундах перед використанням цього компонента",
+
+  "itemGroup.create_magics:main": "Основна вкладка Create: Magics"
+}
