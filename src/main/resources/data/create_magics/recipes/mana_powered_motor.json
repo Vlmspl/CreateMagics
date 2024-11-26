@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "output": "create_magics:mana_powered_motor",
+  "pattern": [
+    "IMI",
+    " D ",
+    " S "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "M": {
+      "item": "mna:magic_mote"
+    },
+    "D": {
+      "item": "create:depot"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
+  }
+}

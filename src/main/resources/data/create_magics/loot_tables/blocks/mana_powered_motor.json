@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "mana_powered_motor_drop",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "create_magics:mana_powered_motor"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": [
+              "minecraft:iron_pickaxe",
+              "minecraft:stone_pickaxe",
+              "minecraft:diamond_pickaxe",
+              "minecraft:golden_pickaxe",
+              "minecraft:netherite_pickaxe",
+              "minecraft:wooden_axe",
+              "minecraft:stone_axe",
+              "minecraft:iron_axe",
+              "minecraft:diamond_axe",
+              "minecraft:golden_axe",
+              "minecraft:netherite_axe"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

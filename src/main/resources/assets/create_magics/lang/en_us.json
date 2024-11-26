@@ -2,5 +2,7 @@
   "block.create_magics.mana_powered_motor": "Mana-powered motor",
 
   "mna:components/mana_route": "Mana route",
-  "mna:components/mana_route.desc.delay": "A delay in seconds before applying this component."
+  "mna:components/mana_route.desc.delay": "A delay in seconds before applying this component.",
+
+  "itemGroup.create_magics:main": "Create: Magics main tab"
 }
