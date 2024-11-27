@@ -28,9 +28,9 @@ public class CreateMagics
 
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(CreateMagics.MOD_ID);
 
-    public CreateMagics(FMLJavaModLoadingContext context)
+    public CreateMagics()
     {
-        IEventBus modEventBus = context.getModEventBus();
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
