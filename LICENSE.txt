@@ -1,13 +1,30 @@
-Copyright (c) 2024 VladITandLPlayer
+Copyright ©VladITandLPlayer 2025
+This software is licensed under the following terms:  
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
-(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
+1. Distribution and Hosting  
+   - This software is only authorized for distribution from platforms explicitly designated by the author (e.g., [CurseForge link]).  
+   - Third-party redistributions or hosting on unauthorized platforms are strictly prohibited.  
 
-The above copyright notice and this permission notice shall be included in all copies or 
-substantial portions of the Software.
+2. Code Usage and Modifications  
+   - The source code is provided for educational and reference purposes.  
+   - You may base your own projects on this code, provided that the resulting project constitutes a significant and original departure from the original.  
+     - To qualify as a new project, your work must introduce substantial differences in design, functionality, or content.  
+   - Prohibited actions:  
+     - Uploading modified versions as the original project.  
+     - Reuploading the same code under a different name.  
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+3. Attribution  
+   - Any usage of this software or its derivatives must include proper credit to the author, including:  
+     - The name of the original project.  
+     - A link to the official project page.  
+
+4. Revenue and Monetization  
+   - Derivative works that meet the criteria in Section 2 may be monetized without explicit permission.  
+   - Monetization of the original code or minimal modifications is strictly prohibited.  
+
+5. Violations  
+   - Any violation of this license, including unauthorized redistribution or failure to meet the attribution or modification criteria, will result in the immediate revocation of your rights to use, share, or modify this software.  
+   - The author reserves the right to take legal action against violators.  
+
+6. Amendments and Exceptions  
+   - This license may only be modified or overridden by explicit written consent from the author.  
