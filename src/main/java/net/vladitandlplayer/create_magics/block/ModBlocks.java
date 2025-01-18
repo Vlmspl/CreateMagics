@@ -1,12 +1,14 @@
 package net.vladitandlplayer.create_magics.block;
 
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.decoration.encasing.CasingBlock;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Block;
 import net.vladitandlplayer.create_magics.CreateMagics;
 import net.vladitandlplayer.create_magics.block.custom.mana_powered_motor.ManaPoweredMotorBlock;
 import net.vladitandlplayer.create_magics.item.ModCreativeModeTabs;
@@ -26,6 +28,8 @@ public class ModBlocks {
             .tab(() -> ModCreativeModeTabs.MAIN)
             .transform(customItemModel())
             .register();
+
+
     //So, You might be wondering why this is needed, its needed so this class gets invoked and runs
     public static void register() {
 

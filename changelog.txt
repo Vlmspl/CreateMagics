@@ -1,13 +1,6 @@
 1.19.2 Changelog
 43.4
 ====
- - 43.4.4 Cleanup FML Bindings (backport of #10004 to 1.19.2) (#10105)
- - 43.4.3 Optionally supply FMLJavaModLoadingContext as a param to mod constructors (backport of #10074 to 1.19.2) (#10106)
-          Co-authored-by: RealMangoRage <andrew333awesome@outlook.com>
- - 43.4.2 Fixed falling block entities not rendering as moving blocks (#10006) (#10020)
-          Co-authored-by: Ven <tudurap.com@gmail.com>
- - 43.4.1 Choose default JarJar mod file type based on parent JAR (#10025)
-          Co-authored-by: thedarkcolour <30441001+thedarkcolour@users.noreply.github.com>
  - 43.4.0 1.19.2 RB 4
           https://forums.minecraftforge.net/topic/149548-forge-434-minecraft-1192/
 

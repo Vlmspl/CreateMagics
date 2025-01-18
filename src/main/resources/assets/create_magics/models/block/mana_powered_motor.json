@@ -1,9 +1,8 @@
 {
-	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "create_magics:block/mana_generated_rotor",
-		"particle": "create_magics:block/mana_generated_rotor"
+		"0": "create_magics:block/mana_powered_motor",
+		"particle": "create_magics:block/mana_powered_motor"
 	},
 	"elements": [
 		{
