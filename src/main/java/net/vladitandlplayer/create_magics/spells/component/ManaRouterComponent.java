@@ -49,10 +49,11 @@ public class ManaRouterComponent extends SpellEffect {
         IManaStorage storage = Utils.HasManaStorage(world, blockPos);
 
         if (storage != null) {
-            storage.addMana(20);
+            storage.addMana(5);
         }
 
     }
+
 
     @Override
     public Affinity getAffinity() {

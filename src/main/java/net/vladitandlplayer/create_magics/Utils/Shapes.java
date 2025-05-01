@@ -3,7 +3,7 @@ package net.vladitandlplayer.create_magics.Utils;
 // Credits to mrh0, since it's taken from his github on creates addon of Create crafts and additions,
 // Url: https://github.com/mrh0/createaddition/blob/1.19.2/src/main/java/com/mrh0/createaddition/shapes/CAShapes.java
 
-import com.simibubi.create.foundation.utility.VoxelShaper;
+import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;

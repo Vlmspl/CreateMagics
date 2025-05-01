@@ -6,7 +6,7 @@ import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import net.createmod.catnip.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,11 +16,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.vladitandlplayer.create_magics.IManaStorage;
+import net.vladitandlplayer.create_magics.Utils.Utils;
 import net.vladitandlplayer.create_magics.block.ModBlocks;
 
 import java.util.List;
 
 public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity implements IManaStorage {
+    private String spacing = "   ";
+
     private Direction getMappedDirection(Direction toMap) {
         if (toMap == Direction.SOUTH) {
             return Direction.WEST;
@@ -51,6 +54,8 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
     private static final float BASE_MANA_CONSUMPTION = 0.5f; // Define a base mana consumption value
     private static final float MAX_STRESS = 8192.0f; // Define a maximum stress capacity, adjust as needed
 
+    private static final float MANA_FETCHING_SPEED = 2.0f;
+
 
 
     public ManaPoweredMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -64,7 +69,7 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
         CenteredSideValueBoxTransform slot =
                 new CenteredSideValueBoxTransform((motor, side) -> side == getMappedDirection(motor.getValue(ManaPoweredMotorBlock.FACING)));
 
-        generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
+        generatedSpeed = new KineticScrollValueBehaviour(Component.translatable("create.generic.speed"), this, slot);
         generatedSpeed.between(-256, 256);
         generatedSpeed.value = 32;
         generatedSpeed.withCallback(i -> this.updateGeneratedRotation(i));
@@ -170,7 +175,15 @@ public class ManaPoweredMotorBlockEntity extends GeneratingKineticBlockEntity im
         // Old Lazy
         if (level.isClientSide()) return;
 
-        // Check for mana presence
+        IManaStorage adjacentStorage = Utils.HasManaStorageBlockAround(level, getBlockPos());
+        if (adjacentStorage != null) {
+            float storageMana = adjacentStorage.getMana();
+            if (storageMana >= MANA_FETCHING_SPEED) {
+                adjacentStorage.subMana(MANA_FETCHING_SPEED);
+                addMana(MANA_FETCHING_SPEED);
+            }
+        }
+
         if (Mana > 0) {
             // Calculate mana consumption based on speed
             float speed = Math.abs(generatedSpeed.getValue());

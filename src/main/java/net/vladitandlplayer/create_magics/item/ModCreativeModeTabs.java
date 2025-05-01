@@ -2,7 +2,6 @@ package net.vladitandlplayer.create_magics.item;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllCreativeModeTabs;
-import com.simibubi.create.foundation.utility.Components;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;

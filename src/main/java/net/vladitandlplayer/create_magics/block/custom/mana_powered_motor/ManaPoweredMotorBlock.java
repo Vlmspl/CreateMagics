@@ -2,7 +2,7 @@ package net.vladitandlplayer.create_magics.block.custom.mana_powered_motor;
 
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
-import com.simibubi.create.foundation.utility.VoxelShaper;
+import net.createmod.catnip.math.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
