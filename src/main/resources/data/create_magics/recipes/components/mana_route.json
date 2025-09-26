@@ -1,0 +1,13 @@
+{
+  "type": "mna:component",
+  "tier": 2,
+  "output": "create_magics:components/mana_route",
+  "items": [
+    "mna:mote_water",
+    "minecraft:string"
+  ],
+  "patterns": [
+    "mna:triangle",
+    "mna:circle"
+  ]
+}

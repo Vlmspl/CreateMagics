@@ -2,15 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "PVP",
-    "PMP",
-    "ASA"
+    "SGS",
+    "PPP"
   ],
   "key": {
-    "M": {
-      "item": "mna:mote_water"
-    },
-    "S": {
-      "item": "create:shaft"
+    "G": {
+      "item": "minecraft:glass"
     },
     "V": {
       "item": "mna:vinteum_ingot"
@@ -18,12 +15,12 @@
     "P": {
       "item": "mna:purified_vinteum_ingot"
     },
-    "A": {
+    "S": {
       "item": "mna:superheated_purified_vinteum_ingot"
     }
   },
   "result": {
-    "item": "create_magics:mana_powered_motor",
+    "item": "create_magics:mana_storage",
     "count": 1
   }
 }

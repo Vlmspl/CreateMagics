@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create_magics:mana_powered_motor"
+          "name": "create_magics:mana_storage"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "create_magics:blocks/mana_powered_motor"
+  "random_sequence": "create_magics:blocks/mana_storage"
 }
